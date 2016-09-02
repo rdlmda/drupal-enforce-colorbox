@@ -1,0 +1,6 @@
+name = Enforce Colorbox
+description = Enforces all images (except the ones already with anchors) to open on a Colorbox popup. You need to activate the corresponding filter on the text formats. <a href="http://github.com/ruda-almeida/enforcecolorbox">Project page</a>
+dependencies[] = colorbox
+package = UFRJ
+version = 0.1
+core = 7.x 

@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * Implements hook_filter_info()
+ */
+function enforcecolorbox_filter_info() {
+  $filters = array();
+  $filters['filter_image_classes'] = array(
+    'title' => t('Add a Colorbox lightbox to all images'),
+    'description' => t('Wraps all images in an &lt;a&gt; anchor with a colorbox class, unless they already have links.'),
+    'process callback' => '_enforcecolorbox_images_process',
+  );
+  return $filters;
+}
+
+function _enforcecolorbox_images_process($text, $filter) {
+
+  if (!empty($text)) {
+    $dom = new DOMDocument();
+    $dom->loadHTML('<?xml encoding="utf-8" ?>' . $text);
+
+    $xpath = new DOMXpath($dom);	
+    $images = $xpath->query("//*[not(self::a)]/img");
+    foreach ($images as $image) {
+      $anchor = $dom->createElement('a');
+      $anchor->setAttribute('href',$image->getAttribute('src'));
+      $anchor->setAttribute('class', 'colorbox');
+      $image->parentNode->replaceChild($anchor,$image);
+      $anchor->appendChild($image);
+    }
+    $html = $dom->saveHTML();
+    return $html;
+  }
+  return $text;
+}
